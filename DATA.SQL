@@ -1,45 +1,28 @@
-INSERT INTO `tasks` (`id`, `title`, `start_date`, `due_date`) VALUES
-(1, 'Finalizar informe mensual', '2024-11-01', '2024-11-05'),
-(2, 'Diseñar prototipo de aplicación', '2024-12-10', '2024-12-25'),
-(3, 'Revisión de código fuente', '2025-01-03', '2025-01-10'),
-(4, 'Actualizar documentación técnica', '2025-02-01', '2025-02-04'),
-(5, 'Reunión con el cliente', '2025-01-20', '2025-01-20'),
-(6, 'Implementar nueva funcionalidad', '2025-03-15', '2025-03-22'),
-(7, 'Corregir errores del sistema', '2025-04-01', '2025-04-03'),
-(8, 'Pruebas de integración', '2024-09-10', '2024-09-15'),
-(9, 'Planificación del sprint', '2024-10-02', '2024-10-02'),
-(10, 'Elaborar presentación ejecutiva', '2025-05-10', '2025-05-12'),
-(11, 'Capacitación de nuevos empleados', '2025-02-05', '2025-02-07'),
-(12, 'Migrar base de datos', '2025-01-12', '2025-01-14'),
-(13, 'Desplegar en ambiente de producción', '2024-12-01', '2024-12-02'),
-(14, 'Refactorizar módulo de pagos', '2025-04-05', '2025-04-10'),
-(15, 'Monitoreo post-lanzamiento', '2025-03-01', '2025-03-05'),
-(16, 'Diseñar interfaz móvil', '2024-11-10', '2024-11-15'),
-(17, 'Revisión de seguridad', '2025-02-15', '2025-02-18'),
-(18, 'Generar reporte de métricas', '2024-10-05', '2024-10-07'),
-(19, 'Preparar ambiente de pruebas', '2024-09-25', '2024-09-26'),
-(20, 'Verificar compatibilidad con navegadores', '2024-12-05', '2024-12-10'),
-(21, 'Auditoría de calidad', '2025-01-22', '2025-01-25'),
-(22, 'Revisión de contratos', '2024-11-07', '2024-11-09'),
-(23, 'Diseñar encuestas de satisfacción', '2024-10-15', '2024-10-17'),
-(24, 'Actualizar servidor de staging', '2024-12-20', '2024-12-21'),
-(25, 'Coordinar reunión de retroalimentación', '2025-03-12', '2025-03-12'),
-(26, 'Probar módulo de autenticación', '2025-02-20', '2025-02-24'),
-(27, 'Documentar endpoints de API', '2025-04-15', '2025-04-18'),
-(28, 'Diseñar newsletter corporativo', '2024-09-12', '2024-09-15'),
-(29, 'Validar requerimientos de usuario', '2025-01-28', '2025-01-30'),
-(30, 'Reunión técnica con QA', '2025-03-20', '2025-03-20'),
-(31, 'Pruebas de rendimiento', '2024-11-18', '2024-11-23'),
-(32, 'Actualizar librerías del proyecto', '2025-02-10', '2025-02-12'),
-(33, 'Corregir fallos del login', '2024-10-01', '2024-10-03'),
-(34, 'Documentar errores comunes', '2025-01-05', '2025-01-07'),
-(35, 'Integrar sistema de pagos', '2025-04-01', '2025-04-06'),
-(36, 'Monitoreo de tráfico web', '2025-05-01', '2025-05-03'),
-(37, 'Evaluar herramientas de monitoreo', '2024-12-28', '2024-12-30'),
-(38, 'Crear manual de usuario', '2024-11-25', '2024-11-29'),
-(39, 'Probar soporte multiplataforma', '2025-03-08', '2025-03-10'),
-(40, 'Mejorar velocidad de carga', '2025-02-25', '2025-02-27'),
-(41, 'Realizar entrevistas de usuario', '2025-01-15', '2025-01-17'),
-(42, 'Actualizar sistema de roles', '2025-03-25', '2025-03-28'),
-(43, 'Evaluar feedback del cliente', '2024-09-30', '2024-10-02'),
-(44, 'Crear backups semanales', '2024-12-08', '2024-12-08');
+DROP TABLE IF EXISTS campers;
+CREATE TABLE IF NOT EXISTS campers(
+    ID INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    age INT NOT NULL,
+    birthDate DATE NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    PRIMARY KEY (ID)
+);
+
+INSERT INTO campers (name, age, birthDate, email)
+VALUES 
+('John Doe', 25, '1998-01-15', 'jhondoe@gmail.com');
+
+DROP TABLE IF EXISTS documents;
+CREATE TABLE IF NOT EXISTS documents(
+    ID VARCHAR(30) NOT NULL,
+    type ENUM('CC', 'TI', 'CE', 'PP','PE','DNI', 'RC') NOT NULL DEFAULT 'CC',
+    issueDate DATE NOT NULL,
+    expirationDate DATE NOT NULL,
+    ID_Camper INT NOT NULL, -- 1:M
+    PRIMARY KEY (ID, type),
+    FOREIGN KEY(ID_Camper) REFERENCES campers(ID)
+);
+
+INSERT INTO documents (ID, type, issueDate, expirationDate, ID_Camper)
+VALUES 
+('123', 'TI', '2020-01-01', '2030-01-01', 1);

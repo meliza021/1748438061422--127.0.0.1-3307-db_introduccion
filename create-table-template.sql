@@ -119,7 +119,7 @@ GROUP BY jobTitle;
 
 -- SACAR PROMEDIO DE SALARIOS POR OTRA FORMA SIN DUPLICADOS
 
-SELECT  AVG(salaryAmount) AS promedioSalario `jobTitle` 
+SELECT  AVG(salaryAmount) AS promedioSalario `jobTitle`
 
 
 
@@ -145,7 +145,7 @@ SELECT lastName AS nombre
 FROM employees
 WHERE lastName LIKE 'S%' OR `lastName` LIKE 'M%'
 ORDER BY nombre DESC;
--- PARA QUE NO SE REPITA 
+-- PARA QUE NO SE REPITA
 SELECT jobTitle AS title
 FROM employees
 GROUP BY title
@@ -194,6 +194,7 @@ INSERT INTO orders (
     (2008, '2025-05-17', '2025-05-27', '2025-05-20', 'Shipped',  'Entregado temprano',            1008),
     (2009, '2025-05-20', '2025-05-30', NULL,         'On Hold',  'Esperando confirmación pago',   1009),
     (2010, '2025-05-22', '2025-06-01', NULL,         'In Process','Armando paquete',             1010);
+    (2011, '2025-05-23', '2025-06-02', NULL,         'In Process','Armando paquete',             1010);
 
 INSERT INTO orderdetails (
     orderNumber,
@@ -214,3 +215,16 @@ INSERT INTO orderdetails (
     (2008, 'P007',  1,  120.00,  1),
     (2009, 'P008', 10,   25.00,  1),
     (2010, 'P009',  2,   75.00,  1);
+
+
+-- como traer lña informaicon en dos tablas en este caso que pueda cumplir con la condicion que le asignamos 
+SELECT *
+FROM orders AS o,orderdetails AS d 
+WHERE o.orderNumber = d.orderNumber
+AND o.orderNumber = 2001;
+
+-- ahora con enjoy
+SELECT *
+FROM orders AS o
+INNER JOIN orderdetails  AS d ON o.orderNumber = d.orderNumber
+

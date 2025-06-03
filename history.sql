@@ -348,3 +348,17 @@ INSERT INTO orderdetails (
     (2008, 'P007',  1,  120.00,  1),
     (2009, 'P008', 10,   25.00,  1),
     (2010, 'P009',  2,   75.00,  1);
+/* 2025-06-03 08:51:50 [3 ms] */ 
+SELECT *
+FROM orders AS o,orderdetails AS d 
+WHERE o.orderNumber = d.orderNumber
+AND o.orderNumber = 2001 LIMIT 100;
+/* 2025-06-03 08:56:07 [1 ms] */ 
+SELECT *
+FROM orders AS o,orderdetails AS d 
+WHERE o.orderNumber = d.orderNumber
+AND o.orderNumber = 2011 LIMIT 100;
+/* 2025-06-03 08:57:15 [3 ms] */ 
+SELECT *
+FROM orders AS o
+INNER JOIN orderdetails  AS d ON o.orderNumber = d.orderNumber LIMIT 100;
