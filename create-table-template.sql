@@ -33,7 +33,7 @@ INSERT INTO customers (
     postalCode,
     country,
     salesRepEmployeeNumber,
-    creditLimit
+    creditLimit,
 ) VALUES
     (1001, 'Acme Corporation',      'Doe',        'John',     '212-555-0101',  '123 Elm Street',         'Suite 100',    'New York',      'NY',    '10001',   'USA',        1370,  50000.00),
     (1002, 'Global Industries Ltd.', 'Smith',      'Anna',     '+44-20-7946-0958', '45 Baker Street',    NULL,          'London',        NULL,   'NW1 6XE', 'UK',         1504,  75000.00),
@@ -73,7 +73,7 @@ WHERE `creditLimit` BETWEEN 50000 AND 1200000
 GROUP BY country,city
 ORDER BY TotalamountCredit DESC;
 
-
+DROP TABLE employees;
 CREATE TABLE employees (
     employeeNumber   INT            NOT NULL PRIMARY KEY,
     lastName         VARCHAR(50)    NOT NULL,
@@ -83,12 +83,14 @@ CREATE TABLE employees (
     officeCode       VARCHAR(10)    NOT NULL,
     reportsTo        INT            NULL,
     jobTitle         VARCHAR(50)    NOT NULL,
+    salaryAmount     INT            NOT NULL,
     CONSTRAINT fk_employees_manager
         FOREIGN KEY (reportsTo)
         REFERENCES employees(employeeNumber)
         ON DELETE SET NULL
         ON UPDATE CASCADE
 );
+
 INSERT INTO employees (
     employeeNumber,
     lastName,
@@ -97,18 +99,30 @@ INSERT INTO employees (
     email,
     officeCode,
     reportsTo,
-    jobTitle
+    jobTitle,
+    salaryAmount
 ) VALUES
-    (1001, 'Smith',     'John',     'x101',  'john.smith@company.com',    '1',   NULL,  'President'),
-    (1002, 'Doe',       'Jane',     'x102',  'jane.doe@company.com',      '1',   1001,  'VP Sales'),
-    (1003, 'Brown',     'Michael',  'x103',  'michael.brown@company.com', '1',   1002,  'Sales Manager'),
-    (1004, 'Lee',       'Susan',    'x104',  'susan.lee@company.com',     '2',   1002,  'Sales Rep'),
-    (1005, 'Garcia',    'Carlos',   'x105',  'carlos.garcia@company.com', '2',   1003,  'Sales Rep'),
-    (1006, 'Miller',    'Karen',    'x106',  'karen.miller@company.com',  '3',   1001,  'VP Marketing'),
-    (1007, 'Wilson',    'David',    'x107',  'david.wilson@company.com',  '3',   1006,  'Marketing Manager'),
-    (1008, 'Martinez',  'María',    'x108',  'maria.martinez@company.com','3',   1007,  'Marketing Rep'),
-    (1009, 'Anderson',  'Robert',   'x109',  'robert.anderson@company.com','2',   1003,  'Sales Support'),
-    (1010, 'Taylor',    'Emily',    'x110',  'emily.taylor@company.com',  '2',   1003,  'Sales Rep');
+    (1001, 'Smith',     'John',     'x101',  'john.smith@company.com',    '1',   NULL,  'President',3500),
+    (1002, 'Doe',       'Jane',     'x102',  'jane.doe@company.com',      '1',   1001,  'VP Sales',2500),
+    (1003, 'Brown',     'Michael',  'x103',  'michael.brown@company.com', '1',   1002,  'Sales Manager',2250),
+    (1004, 'Lee',       'Susan',    'x104',  'susan.lee@company.com',     '2',   1002,  'Sales Rep',2000),
+    (1005, 'Garcia',    'Carlos',   'x105',  'carlos.garcia@company.com', '2',   1003,  'Sales Rep',2000),
+    (1006, 'Miller',    'Karen',    'x106',  'karen.miller@company.com',  '3',   1001,  'VP Marketing',2450),
+    (1007, 'Wilson',    'David',    'x107',  'david.wilson@company.com',  '3',   1006,  'Marketing Manager',2300),
+    (1008, 'Martinez',  'María',    'x108',  'maria.martinez@company.com','3',   1007,  'Marketing Rep',2300),
+    (1009, 'Anderson',  'Robert',   'x109',  'robert.anderson@company.com','2',   1003,  'Sales Support',3100),
+    (1010, 'Taylor',    'Emily',    'x110',  'emily.taylor@company.com',  '2',   1003,  'Sales Rep',2700);
+-- para sacar promedion con nombres
+SELECT jobTitle, AVG(salaryAmount) AS promedioSalario
+FROM employees
+GROUP BY jobTitle;
+
+-- SACAR PROMEDIO DE SALARIOS POR OTRA FORMA SIN DUPLICADOS
+
+SELECT  AVG(salaryAmount) AS promedioSalario `jobTitle` 
+
+
+
 
 -- para buscar solo los que empiezan el correo solo con la j
 SELECT email AS GMAIL
@@ -131,3 +145,72 @@ SELECT lastName AS nombre
 FROM employees
 WHERE lastName LIKE 'S%' OR `lastName` LIKE 'M%'
 ORDER BY nombre DESC;
+-- PARA QUE NO SE REPITA 
+SELECT jobTitle AS title
+FROM employees
+GROUP BY title
+ORDER BY title ASC;
+
+CREATE TABLE orders (
+    orderNumber      INT           NOT NULL PRIMARY KEY,
+    orderDate        DATE          NOT NULL,
+    requiredDate     DATE          NOT NULL,
+    shippedDate      DATE          NULL,
+    status           VARCHAR(15)   NOT NULL,
+    comments         TEXT          NULL,
+    customerNumber   INT           NOT NULL
+);
+
+CREATE TABLE orderdetails (
+    orderNumber       INT           NOT NULL,
+    productCode       VARCHAR(20)   NOT NULL,
+    quantityOrdered   INT           NOT NULL,
+    priceEach         DECIMAL(10,2) NOT NULL,
+    orderLineNumber   SMALLINT      NOT NULL,
+    PRIMARY KEY (orderNumber, productCode),
+    CONSTRAINT fk_orderdetails_orders
+        FOREIGN KEY (orderNumber)
+        REFERENCES orders(orderNumber)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+INSERT INTO orders (
+    orderNumber,
+    orderDate,
+    requiredDate,
+    shippedDate,
+    status,
+    comments,
+    customerNumber
+) VALUES
+    (2001, '2025-05-01', '2025-05-10', '2025-05-05', 'Shipped',  'Entregado sin inconvenientes',    1001),
+    (2002, '2025-05-03', '2025-05-12', '2025-05-08', 'Shipped',  'Entrega parcial, faltan artículos',1002),
+    (2003, '2025-05-05', '2025-05-15', NULL,         'In Process','Pendiente de envío',           1003),
+    (2004, '2025-05-07', '2025-05-17', '2025-05-10', 'Shipped',  'Entregado con demora',          1004),
+    (2005, '2025-05-10', '2025-05-20', NULL,         'Cancelled','Cliente canceló el pedido',    1005),
+    (2006, '2025-05-12', '2025-05-22', '2025-05-18', 'Shipped',  'Todo correcto',                 1006),
+    (2007, '2025-05-15', '2025-05-25', NULL,         'In Process','Preparando envío',            1007),
+    (2008, '2025-05-17', '2025-05-27', '2025-05-20', 'Shipped',  'Entregado temprano',            1008),
+    (2009, '2025-05-20', '2025-05-30', NULL,         'On Hold',  'Esperando confirmación pago',   1009),
+    (2010, '2025-05-22', '2025-06-01', NULL,         'In Process','Armando paquete',             1010);
+
+INSERT INTO orderdetails (
+    orderNumber,
+    productCode,
+    quantityOrdered,
+    priceEach,
+    orderLineNumber
+) VALUES
+    (2001, 'P001',  2,  150.00,  1),
+    (2001, 'P002',  1,  299.99,  2),
+    (2002, 'P003',  5,   45.50,  1),
+    (2003, 'P001',  1,  150.00,  1),
+    (2003, 'P004', 10,   12.75,  2),
+    (2004, 'P005',  3,  250.00,  1),
+    (2005, 'P002',  4,  299.99,  1),
+    (2006, 'P006',  2,  500.00,  1),
+    (2007, 'P004', 20,   12.75,  1),
+    (2008, 'P007',  1,  120.00,  1),
+    (2009, 'P008', 10,   25.00,  1),
+    (2010, 'P009',  2,   75.00,  1);
