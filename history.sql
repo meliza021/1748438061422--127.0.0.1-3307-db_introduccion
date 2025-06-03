@@ -200,3 +200,28 @@ SELECT lastName AS nombre
 FROM employees
 WHERE lastName LIKE 'S%' OR `lastName` LIKE 'M%'
 ORDER BY nombre DESC LIMIT 100;
+/* 2025-06-03 07:57:25 [2 ms] */ 
+SELECT lastName AS nombre
+FROM employees
+WHERE lastName LIKE '_S%' OR `lastName` LIKE 'M%'
+ORDER BY nombre DESC LIMIT 100;
+/* 2025-06-03 07:57:33 [3 ms] */ 
+SELECT lastName AS nombre
+FROM employees
+WHERE lastName LIKE '_o%' OR `lastName` LIKE 'M%'
+ORDER BY nombre DESC LIMIT 100;
+/* 2025-06-03 07:59:41 [2 ms] */ 
+SELECT email AS GMAIL
+FROM employees
+WHERE email LIKE '%gmail%'
+ORDER BY GMAIL DESC LIMIT 100;
+/* 2025-06-03 07:59:58 [2 ms] */ 
+SELECT email AS GMAIL
+FROM employees
+WHERE email LIKE '%company%'
+ORDER BY GMAIL DESC LIMIT 100;
+/* 2025-06-03 08:00:30 [2 ms] */ 
+SELECT email AS GMAIL
+FROM employees
+WHERE email LIKE '%@%'
+ORDER BY GMAIL DESC LIMIT 100;
